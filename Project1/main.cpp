@@ -10,8 +10,8 @@ using namespace std;
 
 
 int main() {
-
-    ifstream dataFile("../data.tsv");
+    cout << "here" << endl;
+    ifstream dataFile("../Project1/data.tsv");
 
 
     if(dataFile.is_open()){
@@ -30,9 +30,6 @@ int main() {
 
         s >> s2;
         cout << s2;
-
-
-
 
 
         dataFile.close();

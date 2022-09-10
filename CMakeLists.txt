@@ -3,4 +3,4 @@ project(CZ4031_Proj1)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(CZ4031_Proj1 main.cpp BPlusTree.cpp BPlusTree.h MemoryPool.cpp MemoryPool.h)
+add_executable(CZ4031_Proj1 Project1/main.cpp Project1/BPlusTree.cpp Project1/BPlusTree.h Project1/MemoryPool.cpp Project1/MemoryPool.h)
