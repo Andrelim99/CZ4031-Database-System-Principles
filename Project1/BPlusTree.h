@@ -6,9 +6,4 @@
 #define CZ4031_PROJ1_BPLUSTREE_H
 
 
-class BPlusTree {
-
-};
-
-
 #endif //CZ4031_PROJ1_BPLUSTREE_H
