@@ -2,50 +2,32 @@
 // Created by Andre on 10/9/2022.
 //
 
+/*
+ * Accessing of records will be done by blockStartPointer + block * blockSize + offset
+ */
+
 #include <iostream>
 #include "MemoryPool.h"
 #include "vector"
 
 using namespace std;
 
-MemoryPool ::MemoryPool(int blockSize) {
+MemoryPool::MemoryPool(int blockSize) {
     this->blockSize = blockSize;
     this->numBlocks = DISK_CAPACITY/blockSize;
+    this->availableNumBlocks = numBlocks;
     this->dbSize = 0;
+    this->startMemoryPtr = new unsigned char[DISK_CAPACITY];
+    this->curBlockIndex = 0;
 
-//    Declare blocks array
-
-    this->startBlockPtr = &blocks[0];
-
-//    Testing
-    Record rec1, rec2;
-    rec1.averageRating = 1;
-    rec1.numVotes = 1;
-    rec1.tconst[0] = '1';
-    rec1.tconst[1] = '\0';
-
-    rec2.averageRating = 2;
-    rec2.numVotes = 2;
-    rec2.tconst[0] = '2';
-    rec2.tconst[1] = '\0';
-
-//    Create empty blocks
-    for(int i = 0; i < 2; i++){
-        Block block;
-        block.remainingCapacity = blockSize;
-        block.numRecords = 0;
-//        block.recPointer = nullptr;
-        if(i == 0)  block.recPointer = &rec1;
-        else block.recPointer = &rec2;
-//        Access startPointerAddress
-        blocks.push_back(block);
+    //    Declare blocks array
+    for(int i = 0; i < numBlocks; i++){
+        Block newBlock;
+//        newBlock.recPointer = nullptr;
+        newBlock.numRecords = 0;
+        newBlock.remainingCapacity = blockSize;
+        this->blocks.push_back(newBlock);
     }
-
-    for(int i = 0; i < 2; i++){
-        cout << blocks[i].recPointer->tconst << endl;
-    }
-
-
 }
 
 
@@ -53,6 +35,10 @@ MemoryPool ::MemoryPool(int blockSize) {
 
 bool MemoryPool::insertRecord(Record record) {
     int recSize = sizeof(record);
+    if(recSize != RECORD_SIZE) {
+        cout << "Size mismatch!" << recSize << endl;
+        return false;
+    }
 
 //    Sanity Check(s)
 //    No more space
@@ -66,16 +52,28 @@ bool MemoryPool::insertRecord(Record record) {
         return false;
     }
 
-//    Find a recAddr = {block, offset} for record
-//    Copy contents of record into &block + offset
 
+    Block *currentBlock = &blocks[curBlockIndex];
+//    if can place record in current block
+    if(currentBlock->remainingCapacity < RECORD_SIZE){
+        curBlockIndex++;
+        availableNumBlocks--;
+        currentBlock = &blocks[curBlockIndex];
+    }
 
-
-
-    return true;
+//        copy contents of record into block
+   if(saveRecord(currentBlock->numRecords, curBlockIndex,  &record)){
+       //        update all values
+       currentBlock->remainingCapacity -= RECORD_SIZE;
+       currentBlock->numRecords++;
+       dbSize += recSize;
+       return true;
+   }
+   return false;
 }
 
 void MemoryPool::displayNBlocks(int n) {
+    if(n == -1) n = curBlockIndex;
     for(int i = 0; i < n; i++){
         displayBlock(i);
     }
@@ -89,8 +87,35 @@ int MemoryPool::getDbSize() {
     return dbSize;
 }
 
-void MemoryPool::displayBlock(int i) {
-    cout << "Block " << i << ": "<< endl;
+void MemoryPool::displayBlock(int blockIndex) {
+    cout << "#####################################"<< endl;
+    cout << "Block " << blockIndex << " contains " << blocks[blockIndex].numRecords << " records" << endl;
+    for(int k = 0; k < blocks[blockIndex].numRecords; k++){
+//            Access pointer and print records
+        void *ptr = startMemoryPtr + (blockIndex * blockSize) + k * RECORD_SIZE;
+        Record * rPtr = (Record *) ptr;
+        cout << rPtr->tconst << "\t" << rPtr->numVotes << "\t" << rPtr->averageRating << endl;
+//
+
+    cout << "-----------------------------------"<< endl;
+}
+//    cout << "Block " << i << ": "<< endl;
 //    Print records in block
+
+}
+
+bool MemoryPool::saveRecord(int numRecords, int blkIndex, Record *rec) {
+    try {
+//    Copy
+        void* recAddr = (startMemoryPtr) + (blkIndex * blockSize) + (RECORD_SIZE * numRecords);
+        memcpy(recAddr, rec, RECORD_SIZE);
+//        Record *test = (Record *) recAddr;
+//        cout << test->tconst << " " << test->numVotes << " " << test->averageRating << endl;
+        return true;
+
+    } catch(...){
+        cout << "error saving record!" << endl;
+        return false;
+    }
 
 }
