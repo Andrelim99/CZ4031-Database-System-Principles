@@ -12,6 +12,8 @@
 
 using namespace std;
 
+const int MB = 1000000;
+
 MemoryPool::MemoryPool(int blockSize) {
     this->blockSize = blockSize;
     this->numBlocks = DISK_CAPACITY/blockSize;
@@ -72,39 +74,6 @@ bool MemoryPool::insertRecord(Record record) {
    return false;
 }
 
-void MemoryPool::displayFirstNBlocks(int n) {
-    if(n == -1) n = curBlockIndex;
-    for(int i = 0; i < n; i++){
-        displayBlock(i);
-    }
-}
-
-
-int MemoryPool::getNumBlocks() {
-    return numBlocks;
-}
-
-int MemoryPool::getDbSize() {
-    return dbSize;
-}
-
-void MemoryPool::displayBlock(int blockIndex) {
-    cout << "#####################################"<< endl;
-    cout << "Block " << blockIndex << " contains " << blocks[blockIndex].numRecords << " records" << endl;
-    for(int k = 0; k < blocks[blockIndex].numRecords; k++){
-//            Access pointer and print records
-        void *ptr = startMemoryPtr + (blockIndex * blockSize) + k * RECORD_SIZE;
-        Record * rPtr = (Record *) ptr;
-        cout << rPtr->tconst << "\t" << rPtr->numVotes << "\t" << rPtr->averageRating << endl;
-//
-
-    cout << "-----------------------------------"<< endl;
-}
-//    cout << "Block " << i << ": "<< endl;
-//    Print records in block
-
-}
-
 bool MemoryPool::saveRecord(int numRecords, int blkIndex, Record *rec) {
     try {
 //    Copy
@@ -120,3 +89,70 @@ bool MemoryPool::saveRecord(int numRecords, int blkIndex, Record *rec) {
     }
 
 }
+
+// Data retrieval
+tuple<void *, Block> MemoryPool::getBlockI(int i) {
+    void *blockAddr = startMemoryPtr + (i * blockSize);
+    Block blk = blocks[i];
+
+    return tuple<void *, Block>(blockAddr, blk);
+}
+
+Record MemoryPool::getRecord(int blockID, int offset) {
+    void *ptr1 = startMemoryPtr + blockID * blockSize + offset * RECORD_SIZE;
+    Record *ptr = (Record *) ptr1;
+//    cout << ptr->tconst << "\t" << ptr->numVotes << "\t" << ptr->averageRating << endl;
+    return *ptr;
+}
+
+//Display
+void MemoryPool::displayBlock(int blockIndex) {
+    cout << "#####################################"<< endl;
+    cout << "Block " << blockIndex << " contains " << blocks[blockIndex].numRecords << " records" << endl;
+    for(int k = 0; k < blocks[blockIndex].numRecords; k++){
+//            Access pointer and print records
+        void *ptr = startMemoryPtr + (blockIndex * blockSize) + k * RECORD_SIZE;
+        Record * rPtr = (Record *) ptr;
+        cout << rPtr->tconst << "\t" << rPtr->numVotes << "\t" << rPtr->averageRating << endl;
+//
+
+    cout << "-----------------------------------"<< endl;
+    }
+}
+
+void MemoryPool::displayFirstNBlocks(int n) {
+    if(n == -1) n = curBlockIndex;
+    cout << "Printing first " << n << " blocks: " << endl;
+    for(int i = 0; i < n; i++){
+        displayBlock(i);
+    }
+}
+
+void MemoryPool::printMemoryPoolDetails() {
+    cout << "Printing Memory Pool Details..." << endl;
+    cout << "Total Memory Capacity: " << DISK_CAPACITY/MB << "MB" << endl;
+    cout << "Available Memory Capacity: " << (float)(DISK_CAPACITY - dbSize)/MB << "MB" << endl;
+    cout << "Memory Used (DB Size): " << (float)dbSize/MB << "MB" << endl << endl;
+
+    cout << "Block size: " << blockSize << "B" << endl;
+    cout << "Total number of blocks: " << numBlocks << endl;
+    cout << "Number of blocks used: " << numBlocks-availableNumBlocks << endl << endl;
+
+    cout << "Record size: " << RECORD_SIZE << "B" << endl;
+
+
+
+
+
+}
+
+
+int MemoryPool::getNumBlocks() {
+    return numBlocks;
+}
+
+
+int MemoryPool::getDbSize() {
+    return dbSize;
+}
+

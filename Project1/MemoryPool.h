@@ -8,6 +8,7 @@
 #define CZ4031_PROJ1_MEMORYPOOL_H
 
 #include "vector"
+#include "tuple"
 using namespace std;
 
 struct Record{
@@ -53,10 +54,18 @@ public:
     void displayFirstNBlocks(int n);
     void displayBlock(int i);
 
+    void printMemoryPoolDetails();
 
     int getNumBlocks();
 
+    tuple<void *, Block> getBlockI(int i);
+
+    Record getRecord(int blockID, int offset);
+
+    vector<void *> getAllRecordAddress();
+
     int getDbSize();
+
 
 };
 
