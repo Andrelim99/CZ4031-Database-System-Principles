@@ -53,8 +53,13 @@ public:
 
     void displayFirstNBlocks(int n);
     void displayBlock(int i);
+    void displayDatablockBasedOnRecordAddress(void * ptr);
 
     void printMemoryPoolDetails();
+
+    tuple<int, int> convertRecordAddressToBlockOffset(void * ptr);
+
+    bool deleteRecord(unsigned char * addr);
 
     int getNumBlocks();
 

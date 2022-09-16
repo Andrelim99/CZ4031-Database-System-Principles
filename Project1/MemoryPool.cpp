@@ -128,6 +128,12 @@ void MemoryPool::displayFirstNBlocks(int n) {
     }
 }
 
+void MemoryPool::displayDatablockBasedOnRecordAddress(void *ptr) {
+    tuple<int, int> converted = convertRecordAddressToBlockOffset(ptr);
+    int blockId = get<0>(converted);
+    displayBlock(blockId);
+}
+
 void MemoryPool::printMemoryPoolDetails() {
     cout << "Printing Memory Pool Details..." << endl;
     cout << "Total Memory Capacity: " << DISK_CAPACITY/MB << "MB" << endl;
@@ -139,11 +145,17 @@ void MemoryPool::printMemoryPoolDetails() {
     cout << "Number of blocks used: " << numBlocks-availableNumBlocks << endl << endl;
 
     cout << "Record size: " << RECORD_SIZE << "B" << endl;
+}
 
+tuple<int, int> MemoryPool::convertRecordAddressToBlockOffset(void *ptr) {
+//    Find block id
+    unsigned char * ptrConvert = (unsigned char *) ptr;
+    int blockID = (ptrConvert - startMemoryPtr) / blockSize;
+    int offset =  ((ptrConvert - startMemoryPtr) % blockSize) / RECORD_SIZE;
 
+//    cout << "Block ID: " << blockID << " Offset: " << offset<< endl;
 
-
-
+    return tuple<int, int>(blockID, offset);
 }
 
 
