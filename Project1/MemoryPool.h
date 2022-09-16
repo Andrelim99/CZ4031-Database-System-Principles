@@ -37,7 +37,7 @@ private:
     vector<Block> blocks;
 
 
-    void displayBlock(int i);
+
 
     bool saveRecord(int numRecords, int blkIndex, Record * rec);
 
@@ -50,7 +50,9 @@ public:
 
     bool insertRecord(Record record);
 
-    void displayNBlocks(int n);
+    void displayFirstNBlocks(int n);
+    void displayBlock(int i);
+
 
     int getNumBlocks();
 

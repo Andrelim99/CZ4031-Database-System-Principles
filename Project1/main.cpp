@@ -24,7 +24,9 @@ int main() {
 //        Remove header
         getline(dataFile, line);
         int counter = 0;
-        while(getline(dataFile, line) /*&& counter < 11*/){
+        while(getline(dataFile, line)
+//        && counter < 11
+        ){
 //        cout << "Line 1: " << line << endl;
 
             stringstream s(line);
@@ -41,7 +43,8 @@ int main() {
             counter++;
         }
         dataFile.close();
-        mempool.displayNBlocks(3);
+        mempool.displayFirstNBlocks(3);
+        mempool.displayBlock(0);
     }
     else{
         cout <<"OOF";

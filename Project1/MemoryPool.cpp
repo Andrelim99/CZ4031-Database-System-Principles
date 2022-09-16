@@ -72,12 +72,13 @@ bool MemoryPool::insertRecord(Record record) {
    return false;
 }
 
-void MemoryPool::displayNBlocks(int n) {
+void MemoryPool::displayFirstNBlocks(int n) {
     if(n == -1) n = curBlockIndex;
     for(int i = 0; i < n; i++){
         displayBlock(i);
     }
 }
+
 
 int MemoryPool::getNumBlocks() {
     return numBlocks;
