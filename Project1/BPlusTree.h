@@ -45,10 +45,11 @@ public:
     Node* findParent(Node* cur, Node* child);
     int get_height(Node* cur);
     Node* get_root();
-    Node* search(float search_key);
+    int search(float search_key);
     void insert(const key_struct& x);
     void remove(const key_struct& x);
-    int display(Node* cursor, int nodecount, bool first);
+    void display(Node* cur);
+    void displayNode(Node* cur);
 };
 
 #endif //CZ4031_PROJ1_BPLUSTREE_H

@@ -36,14 +36,28 @@ BPlusTree::BPlusTree(){
 }
 
 int BPlusTree::get_height(Node* cur){
-    return 0;
+    if (cur == NULL)
+    {
+        return 0;
+    }
+    if (cur->isLeaf == false)
+    {
+        return (get_height(cur->node_ptr[0]) + 1);
+    }
+    else if (cur->isLeaf == true) {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 Node* BPlusTree::get_root(){
     return root;
 }
 
-Node* BPlusTree::search(float search_key){
+int BPlusTree::search(float search_key){
     if(root == NULL)
     {
         cout << "B+ Tree is empty!" << endl;
@@ -52,6 +66,9 @@ Node* BPlusTree::search(float search_key){
     else
     {
         Node* cur = root;
+        displayNode(cur);
+        cout << endl;
+        int nodecount = 1;
         // Travel to leaf node
         while(cur->isLeaf == false)
         {
@@ -71,6 +88,9 @@ Node* BPlusTree::search(float search_key){
             {
                 cur = cur->node_ptr[cur->num_keys+1];
             }
+            displayNode(cur);
+            cout << endl;
+            nodecount++;
         }
 
         // Find search key in leaf node
@@ -79,11 +99,11 @@ Node* BPlusTree::search(float search_key){
             if(cur->keys[i].key == search_key)
             {
                 cout<<"Key found!"<<endl;
-                return cur;
+                return nodecount;
             }
         }
         cout<<"Key not found!"<<endl;
-        return NULL;
+        return nodecount;
     }
 }
 
@@ -95,6 +115,36 @@ void BPlusTree::remove(const key_struct& x){
 
 }
 
-int BPlusTree::display(Node* cursor, int nodecount, bool first ){
-    return 1;
+void BPlusTree::display(Node* cur){
+    //Function to display the content of the root node and its 1st child nodes
+    if (cur != NULL) {
+        cout << "Root" << endl;
+        displayNode(cur);
+
+        cout << "Level 1 : " << endl;
+        //Display the contents of the 1st child nodes
+        for (int i = 0; i <= cur->num_keys; i++)
+        {
+            displayNode(cur->node_ptr[i]);
+            cout << "   ";
+        }
+        cout << endl;
+    }
+    else
+    {
+        cout << "B+ Tree is empty!" << endl;
+    }
+}
+
+void BPlusTree::displayNode(Node* cur) {
+    // Displaying a node and its contents in the B+ Tree.
+    //Print out all contents in the node such as |key1|key2|key3|...
+    int i = 0;
+    cout << "|";
+
+    //Printing all filled keys
+    for (int i = 0; i < cur->num_keys; i++)
+    {
+        cout << cur->keys[i].key << "|";
+    }
 }
