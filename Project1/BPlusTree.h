@@ -15,22 +15,22 @@ using namespace std;
 
 //Declaration to be within the guards
 
-struct key_struct{
-    float key;
+struct key{
+    int keyValue;
     vector <void *> address;
 };
 
 class Node{
     //Set the variables of the tree to private
 private:
-    bool isLeaf;
-    key_struct *keys;
-    int num_keys;
-    Node** node_ptr;
+    bool leafNode;
+    key *keys;
+    int numOfKeys;
+    Node** nodePtr;
     friend class BPlusTree;
 public:
     //Set the constructor to public
-    Node(int max_keys);
+    Node();
 };
 
 class BPlusTree{
@@ -40,14 +40,14 @@ private:
 public:
     //Set the constructor and methods of BPlusTree
     BPlusTree();
-    void insertInternal(const key_struct& x, Node* cur, Node* child);
-    void removeInternal(const key_struct& x, Node* cur, Node* child);
-    Node* findParent(Node* cur, Node* child);
-    int get_height(Node* cur);
-    Node* get_root();
-    int search(float search_key);
-    void insert(const key_struct& x);
-    void remove(const key_struct& x);
+    void insertInternal(Node* cur, Node* child, const key& numVotes);
+    void removeInternal(Node* cur, Node* child, const key& numVotes);
+    Node* searchParent(Node* cur, Node* child);
+    int getHeightOfTree(Node* cur);
+    Node* getRootOfTree();
+    int searchNode(int key);
+    void insertKey(const key& numVotes);
+    void removeKey(const key& numVotes);
     void display(Node* cur);
     void displayNode(Node* cur);
 };

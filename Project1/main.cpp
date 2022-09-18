@@ -64,11 +64,11 @@ int main() {
     while(tmpBlk.numRecords > 0){
 //        Save records into B+ tree
         for(int i = 0;  i < tmpBlk.numRecords; i++){
-            key_struct keyStruct;
+            key keyStruct;
 //            Pass ADDRESS of RECORD and numVotes
             keyStruct.address.push_back((unsigned char *)get<0>(tmpTuple) + i * 20);
             Record tmpRec = mempool.getRecord(blockIndex, i);
-            keyStruct.key = tmpRec.numVotes;
+            keyStruct.keyValue = tmpRec.numVotes;
 
 //            Testing
 //            cout << "Address: " << keyStruct.address[0] << "\t" << "Key value: " << keyStruct.key << endl;
