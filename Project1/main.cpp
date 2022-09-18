@@ -6,6 +6,8 @@
 #include <string.h>
 #include "MemoryPool.h"
 #include "BPlusTree.h"
+#include "BPlusTree.cpp"
+#include <typeinfo>
 
 
 using namespace std;
@@ -61,6 +63,7 @@ int main() {
  * Save address and numVotes
  * Insert into B+ Tree
  */
+
     while(tmpBlk.numRecords > 0){
 //        Save records into B+ tree
         for(int i = 0;  i < tmpBlk.numRecords; i++){
@@ -88,7 +91,58 @@ int main() {
         tmpBlk = get<1>(tmpTuple);
     }
 
+    BPlusTree node;
 
+    /*
+     Experiment 2: 
+     Build a B+ tree on the attribute "numVotes" by inserting the records sequentially and report the following statistics:
+     - The parameter n of the B+ tree;
+     - The number of nodes of the B+ tree;
+     - The height of the B+ tree, ie., the number of levels of the B+ tree;
+     - The content of the root node and its 1st child node
+    */
+
+    cout << "-----------------Experiment 2-----------------" << endl;
+    cout << "Parameter n of the B+ Tree      : " <<
+    cout << "Number of nodes of the B+ Tree  : " <<
+    cout << "Height of the B+ Tree           : " << node.getHeightOfTree(node.getRootOfTree()) << endl;
+    cout << "Content of Root Node and its 1st Child : " << endl;
+    node.display(node.getRootOfTree());
+
+    /*
+    Experiment 3:
+    Retrieve those movies with the “numVotes” equal to 500 and report the following statistics:
+    - The number and the content of index nodes the process accesses;
+    - The number and the content of data blocks the process accesses;
+    - The average of “averageRating’s” of the records that are returned;
+    */
+
+    cout << "-----------------Experiment 3-----------------" << endl;
+    // retreiving number of index nodes accesedd as well as printing content of index nodes
+    int num = node.searchNode(500);
+    cout << "Number of index nodes the precess accessed : " << num << endl;
+    cout << "Number of data blocks the precess accessed : " <<     << endl;
+
+    /*
+    Experiment 4:
+    Retrieve those movies with the attribute “numVotes” from 30,000 to 40,000, both inclusively and report the following statistics:
+    - The number and the content of index nodes the process accesses;
+    - The number and the content of data blocks the process accesses;
+    - The average of “averageRating’s” of the records that are returned;
+    */
+     
+    cout << "-----------------Experiment 4-----------------" << endl;
+
+    /*
+    Experiment 5:
+    Delete those movies with the attribute “numVotes” equal to 1,000, update the B+ tree accordingly, and report the following statistics:   
+    - The number of times that a node is deleted (or two nodes are merged) during the process of the updating the B+ tree;
+    - The number nodes of the updated B+ tree;
+    - The height of the updated B+ tree;
+    - The content of the root node and its 1st child node of the updated B+ tree;
+    */
+    
+    cout << "-----------------Experiment 5-----------------" << endl;
 
     return 0;
 
