@@ -40,14 +40,20 @@ private:
 public:
     //Set the constructor and methods of BPlusTree
     BPlusTree();
+    void insertKey(const key& numVotes);
     void insertInternal(Node* cur, Node* child, const key& numVotes);
+    void removeKey(const key& numVotes);
     void removeInternal(Node* cur, Node* child, const key& numVotes);
     Node* searchParent(Node* cur, Node* child);
     int getHeightOfTree(Node* cur);
     Node* getRootOfTree();
     int searchNode(int key);
-    void insertKey(const key& numVotes);
-    void removeKey(const key& numVotes);
+    int findPositionInNode(Node* cur, const key& numVotes, int numOfKeys);
+    int findPositionInArray(struct key keys[], const key& numVotes, int numOfKeys);
+    void shiftKeysInNode(Node* cur, int position, int numOfKeys);
+    void shiftKeysInArray(struct key keys[], int position, int numOfKeys);
+    void shiftPtrInNode(Node* cur, int position, int numOfKeys);
+    void shiftPtrInArray(Node **nodePointers, int position, int numOfKeys);
     void display(Node* cur);
     void displayNode(Node* cur);
 };

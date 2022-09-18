@@ -9,7 +9,7 @@
 #include<vector>
 #include "BPlusTree.h"
 #include "MemoryPool.h"
-#include "math.h"
+#include <cmath>
 using namespace std;
 
 int MAX_NODE_KEYS = 5;
@@ -21,7 +21,143 @@ Node::Node()
     nodePtr = new Node*[MAX_NODE_POINTERS];
 }
 
+BPlusTree::BPlusTree(){
+    root = nullptr;
+}
+
+void BPlusTree::insertKey(const key& numVotes){
+    //This function inserts a key (numVotes) into a node
+    if (root == nullptr){
+        //This function runs if the root is empty, it creates a new node, and inserts the key.
+        root = new Node;
+        root->keys[0] = numVotes;
+        root->numOfKeys+=1;
+        root->leafNode = true;
+    }
+    else {
+        //Instantiate a new pointer that points toward the root for manipulation.
+        Node *cursor = root;
+        //To keep track of the parent node per loop
+        Node *parent;
+
+        //This while loop helps to traverse the tree downwards, until it reaches the leaf node
+        while(!cursor -> leafNode){
+            parent = cursor;
+            //This for loop helps to traverse the node to the correct pointer.
+            for(int i = 0; i< cursor->numOfKeys; i++){
+                if(numVotes.keyValue < cursor->keys[i].keyValue){
+                    cursor = cursor -> nodePtr[i];
+                    break;
+                }
+                if (i == cursor->numOfKeys - 1){
+                    cursor = cursor->nodePtr[i+1];
+                    break;
+                }
+            }
+        }
+        //This condition runs only when this node is not full yet
+        if (cursor->numOfKeys < MAX_NODE_KEYS){
+            int pos = findPositionInNode(cursor, numVotes, cursor->numOfKeys);
+            shiftKeysInNode(cursor, pos, cursor->numOfKeys);
+            cursor->keys[pos] = numVotes;
+            cursor->numOfKeys+=1;
+
+            //Seems a bit sus, will work on this if there seems to be any issue in the future
+            cursor->nodePtr[cursor->numOfKeys] = cursor->nodePtr[cursor->numOfKeys-1];
+            cursor->nodePtr[cursor->numOfKeys-1] = nullptr;
+        }
+            //This condition runs when this node is full, hence a split needs to be done
+        else{
+            Node* newNode = new Node;
+            key nodeKeys[MAX_NODE_KEYS+1];
+            for(int i = 0; i< MAX_NODE_KEYS; i++){
+                nodeKeys[i] = cursor->keys[i];
+            }
+            int pos = findPositionInArray(nodeKeys, numVotes, MAX_NODE_KEYS);
+            shiftKeysInArray(nodeKeys, pos, MAX_NODE_KEYS);
+            nodeKeys[pos] = numVotes;
+            newNode->leafNode = true;
+            int leftNodeKeyCount =  ceil((MAX_NODE_KEYS+1)/2);
+            int rightNodeKeyCount = floor((MAX_NODE_KEYS+1)/2);
+            cursor->numOfKeys = leftNodeKeyCount;
+            newNode->numOfKeys = rightNodeKeyCount;
+            cursor->nodePtr [cursor->numOfKeys] = newNode;
+
+            //Seems abit sus, will go through this again to see if this needs changes in the future.
+            newNode->nodePtr[newNode->numOfKeys] = cursor->nodePtr[MAX_NODE_KEYS];
+            cursor->nodePtr[MAX_NODE_KEYS] = nullptr;
+
+
+            for(int i = 0; i < cursor->numOfKeys; i++){
+                cursor->keys[i] = nodeKeys[i];
+            }
+            for(int i=0, j=cursor->numOfKeys; i< newNode->numOfKeys; i++, j++){
+                newNode->keys[i] = nodeKeys[j];
+            }
+            if(cursor == root){
+                Node *newRoot = new Node;
+                newRoot->keys[0] = newNode->keys[0];
+                newRoot->nodePtr[0] = cursor;
+                newRoot->nodePtr[1] = newNode;
+                newRoot->leafNode = false;
+                newRoot->numOfKeys = 1;
+                this->root = newRoot;
+            } else{
+
+                //Go through the recursion
+                insertInternal(parent, newNode, newNode->keys[0]);
+            }
+        }
+    }
+}
+
 void BPlusTree::insertInternal(Node* cur, Node* child, const key& numVotes){
+    if(cur -> numOfKeys < MAX_NODE_KEYS){
+        int pos = findPositionInNode(cur, numVotes, cur->numOfKeys);
+        shiftKeysInNode(cur, pos, cur->numOfKeys);
+        shiftPtrInNode(cur,pos+1, cur->numOfKeys+1);
+        cur->keys[pos] = numVotes;
+        cur->numOfKeys++;
+        cur->nodePtr[pos+1] = child;
+    } else{
+        Node* newNode = new Node;
+        key nodeKeys[MAX_NODE_KEYS+1];
+        Node* nodePointers[MAX_NODE_POINTERS+1];
+        for(int i=0; i<MAX_NODE_KEYS; i++){
+            nodeKeys[i] = cur->keys[i];
+        }
+        for(int i=0; i< MAX_NODE_POINTERS; i++){
+            nodePointers[i] = cur->nodePtr[i];
+        }
+        int pos = findPositionInArray(nodeKeys,numVotes,MAX_NODE_KEYS);
+        shiftKeysInArray(nodeKeys,pos,MAX_NODE_KEYS);
+        shiftPtrInArray(nodePointers, pos+1, MAX_NODE_POINTERS);
+        nodeKeys[pos] = numVotes;
+        nodePointers[pos+1] = child;
+        newNode->leafNode = false;
+        cur->numOfKeys = (MAX_NODE_KEYS+1)/2;
+        newNode->numOfKeys = MAX_NODE_KEYS - (MAX_NODE_KEYS+1)/2;
+        for(int i = 0, j = cur->numOfKeys; i<newNode->numOfKeys; i++, j++){
+            newNode->keys[i] = nodeKeys[j];
+        }
+        for(int i = 0, j= cur->numOfKeys+1; i<newNode->numOfKeys+1; i++, j++){
+            newNode->nodePtr[i] = nodePointers[j];
+        }
+        if(cur == root){
+            Node* newRoot =  new Node;
+            newRoot->keys[0] = cur->keys[cur->numOfKeys];
+            newRoot->nodePtr[0] = cur;
+            newRoot->nodePtr[1] = newNode;
+            newRoot->leafNode = false;
+            newRoot->numOfKeys+= 1;
+            root = newRoot;
+        }else{
+            insertInternal(searchParent(root, cur), newNode, cur->keys[cur->numOfKeys]);
+        }
+    }
+}
+
+void BPlusTree::removeKey(const key& numVotes){
 
 }
 
@@ -46,10 +182,6 @@ Node* BPlusTree::searchParent(Node* cur, Node* child){
         }
     }
     return search;
-}
-
-BPlusTree::BPlusTree(){
-    root = nullptr;
 }
 
 int BPlusTree::getHeightOfTree(Node* cur){
@@ -78,7 +210,7 @@ int BPlusTree::searchNode(int search_key){
     if(root == NULL)
     {
         cout << "B+ Tree is empty!" << endl;
-        return NULL;
+        return 0;
     }
     else
     {
@@ -124,102 +256,6 @@ int BPlusTree::searchNode(int search_key){
     }
 }
 
-void BPlusTree::insertKey(const key& numVotes){
-    //This function inserts a key (numVotes) into a node
-    if (root == nullptr){
-        //This function runs if the root is empty, it creates a new node, and inserts the key.
-        root = new Node;
-        root->keys[0] = numVotes;
-        root->numOfKeys+=1;
-        root->leafNode = true;
-    }
-    else {
-        //Instantiate a new pointer that points toward the root for manipulation.
-        Node *cursor = root;
-        //To keep track of the parent node per loop
-        Node *parent;
-
-        //This while loop helps to traverse the tree downwards, until it reaches the leaf node
-        while(!cursor -> leafNode){
-            parent = cursor;
-            //This for loop helps to traverse the node to the correct pointer.
-            for(int i = 0; i< cursor->numOfKeys; i++){
-                if(numVotes.keyValue < cursor->keys[i].keyValue){
-                    cursor = cursor -> nodePtr[i];
-                    break;
-                }
-                if (i == cursor->numOfKeys - 1){
-                    cursor = cursor->nodePtr[i+1];
-                    break;
-                }
-            }
-        }
-        //This condition runs only when this node is not full yet
-        if (cursor->numOfKeys < MAX_NODE_KEYS){
-            int pos = 0;
-            for(;pos < cursor->numOfKeys; pos++){
-                if(numVotes.keyValue < cursor->keys[pos].keyValue){
-                    break;
-                }
-            }
-            for(int j = cursor->numOfKeys; j> pos; j--){
-                cursor->keys[j] = cursor->keys[j-1];
-            }
-            cursor->keys[pos] = numVotes;
-            cursor->numOfKeys+=1;
-            cursor->nodePtr[cursor->numOfKeys] = cursor->nodePtr[cursor->numOfKeys-1];
-            cursor->nodePtr[cursor->numOfKeys-1] = nullptr;
-        }
-        //This condition runs when this node is full, hence a split needs to be done
-        else{
-            Node* newNode = new Node;
-            key nodeSeparator[MAX_NODE_KEYS+1];
-            for(int i = 0; i< MAX_NODE_KEYS; i++){
-                nodeSeparator[i] = cursor->keys[i];
-            }
-            int pos = 0;
-            for(;pos < MAX_NODE_KEYS; pos++){
-                if(numVotes.keyValue < nodeSeparator[pos].keyValue){
-                    break;
-                }
-            }
-            for(int j = MAX_NODE_KEYS; j>pos; j--){
-                nodeSeparator[j] = nodeSeparator[j-1];
-            }
-            nodeSeparator[pos] = numVotes;
-            newNode->leafNode = true;
-            int leftNodeKeyCount =  ceil((MAX_NODE_KEYS+1)/2);
-            int rightNodeKeyCount = floor((MAX_NODE_KEYS+1)/2);
-            cursor->numOfKeys = leftNodeKeyCount;
-            newNode->numOfKeys = rightNodeKeyCount;
-            cursor->nodePtr [cursor->numOfKeys] = newNode;
-            newNode->nodePtr[newNode->numOfKeys] = cursor->nodePtr[MAX_NODE_KEYS];
-            cursor->nodePtr[MAX_NODE_KEYS] = nullptr;
-            for(int i = 0; i < cursor->numOfKeys; i++){
-                cursor->keys[i] = nodeSeparator[i];
-            }
-            for(int i=0, j=cursor->numOfKeys; i< newNode->numOfKeys; i++, j++){
-                newNode->keys[i] = nodeSeparator[j];
-            }
-            if(cursor == root){
-                Node *newRoot = new Node;
-                newRoot->keys[0] = newNode->keys[0];
-                newRoot->nodePtr[0] = cursor;
-                newRoot->nodePtr[1] = newNode;
-                newRoot->leafNode = false;
-                newRoot->numOfKeys = 1;
-                this->root = newRoot;
-            } else{
-                insertInternal(parent, newNode, newNode->keys[0]);
-            }
-        }
-    }
-}
-
-void BPlusTree::removeKey(const key& numVotes){
-
-}
-
 void BPlusTree::display(Node* cur){
     //Function to display the content of the root node and its 1st child nodes
     if (cur != NULL) {
@@ -250,5 +286,49 @@ void BPlusTree::displayNode(Node* cur) {
     for (int i = 0; i < cur->numOfKeys; i++)
     {
         cout << cur->keys[i].keyValue << "|";
+    }
+}
+
+int BPlusTree::findPositionInNode(Node* cur, const key& numVotes, int numOfKeys){
+    int pos = 0;
+    for(;pos < numOfKeys; pos++){
+        if(numVotes.keyValue < cur->keys[pos].keyValue){
+            break;
+        }
+    }
+    return pos;
+}
+
+int BPlusTree::findPositionInArray(struct key keys[], const key& numVotes, int numOfKeys){
+    int pos = 0;
+    for(;pos < numOfKeys; pos++){
+        if(numVotes.keyValue < keys[pos].keyValue){
+            break;
+        }
+    }
+    return pos;
+}
+
+void BPlusTree::shiftKeysInNode(Node* cur, int position, int numOfKeys){
+    for(int j = numOfKeys; j> position; j--){
+        cur->keys[j] = cur->keys[j-1];
+    }
+}
+
+void BPlusTree::shiftKeysInArray(struct key keys[], int position, int numOfKeys){
+    for(int j = numOfKeys; j>position; j--){
+        keys[j] = keys[j-1];
+    }
+}
+
+void BPlusTree::shiftPtrInNode(Node* cur, int position, int numOfKeys){
+    for(int j =  numOfKeys; j>position; j--){
+        cur->nodePtr[j] = cur->nodePtr[j-1];
+    }
+}
+
+void BPlusTree::shiftPtrInArray(Node** nodePointers, int position, int numOfKeys){
+    for(int j = numOfKeys; j>position; j--){
+        nodePointers[j] = nodePointers[j-1];
     }
 }
