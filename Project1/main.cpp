@@ -64,6 +64,8 @@ int main() {
  * Insert into B+ Tree
  */
 
+    //Initialize B+ tree to insert keys
+    BPlusTree newTree;
     while(tmpBlk.numRecords > 0){
 //        Save records into B+ tree
         for(int i = 0;  i < tmpBlk.numRecords; i++){
@@ -72,6 +74,7 @@ int main() {
             keyStruct.address.push_back((unsigned char *)get<0>(tmpTuple) + i * 20);
             Record tmpRec = mempool.getRecord(blockIndex, i);
             keyStruct.keyValue = tmpRec.numVotes;
+            newTree.insertKey(keyStruct);
 
 //            Testing
 //            cout << "Address: " << keyStruct.address[0] << "\t" << "Key value: " << keyStruct.key << endl;
@@ -90,9 +93,6 @@ int main() {
         tmpTuple = mempool.getBlockI(blockIndex);
         tmpBlk = get<1>(tmpTuple);
     }
-
-    BPlusTree node;
-
     /*
      Experiment 2: 
      Build a B+ tree on the attribute "numVotes" by inserting the records sequentially and report the following statistics:
@@ -103,11 +103,11 @@ int main() {
     */
 
     cout << "-----------------Experiment 2-----------------" << endl;
-    cout << "Parameter n of the B+ Tree      : " <<
-    cout << "Number of nodes of the B+ Tree  : " <<
-    cout << "Height of the B+ Tree           : " << node.getHeightOfTree(node.getRootOfTree()) << endl;
+    cout << "Parameter n of the B+ Tree      : " << endl;
+    cout << "Number of nodes of the B+ Tree  : " << endl;
+    cout << "Height of the B+ Tree           : " << newTree.getHeightOfTree(newTree.getRootOfTree()) << endl;
     cout << "Content of Root Node and its 1st Child : " << endl;
-    node.display(node.getRootOfTree());
+    newTree.display(newTree.getRootOfTree());
 
     /*
     Experiment 3:
@@ -119,9 +119,9 @@ int main() {
 
     cout << "-----------------Experiment 3-----------------" << endl;
     // retreiving number of index nodes accesedd as well as printing content of index nodes
-    int num = node.searchNode(500);
+    int num = newTree.searchNode(500);
     cout << "Number of index nodes the precess accessed : " << num << endl;
-    cout << "Number of data blocks the precess accessed : " <<     << endl;
+    cout << "Number of data blocks the precess accessed : " <<  "To Be Filled"  << endl;
 
     /*
     Experiment 4:
