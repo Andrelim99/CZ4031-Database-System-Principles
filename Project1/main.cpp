@@ -6,7 +6,6 @@
 #include <string.h>
 #include "MemoryPool.h"
 #include "BPlusTree.h"
-#include "BPlusTree.cpp"
 #include <typeinfo>
 
 
@@ -66,6 +65,7 @@ int main() {
 
     //Initialize B+ tree to insert keys
     BPlusTree newTree;
+    int count = 0;
     while(tmpBlk.numRecords > 0){
 //        Save records into B+ tree
         for(int i = 0;  i < tmpBlk.numRecords; i++){
@@ -75,6 +75,7 @@ int main() {
             Record tmpRec = mempool.getRecord(blockIndex, i);
             keyStruct.keyValue = tmpRec.numVotes;
             newTree.insertKey(keyStruct);
+            count++;
 
 //            Testing
 //            cout << "Address: " << keyStruct.address[0] << "\t" << "Key value: " << keyStruct.key << endl;
@@ -101,6 +102,8 @@ int main() {
      - The height of the B+ tree, ie., the number of levels of the B+ tree;
      - The content of the root node and its 1st child node
     */
+
+    cout << "Records inserted in the B+ tree: " << count << endl;
 
     cout << "-----------------Experiment 2-----------------" << endl;
     cout << "Parameter n of the B+ Tree      : " << endl;
