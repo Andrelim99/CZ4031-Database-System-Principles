@@ -121,10 +121,10 @@ int main() {
     */
 
     cout << "-----------------Experiment 3-----------------" << endl;
-    // retreiving number of index nodes accesedd as well as printing content of index nodes
-    int num = newTree.searchNode(500);
-    cout << "Number of index nodes the precess accessed : " << num << endl;
-    cout << "Number of data blocks the precess accessed : " <<  "To Be Filled"  << endl;
+    // retrieving number of index nodes accessed as well as printing content of index nodes
+    int num_3 = newTree.searchNode(500,2000);
+    cout << "Number of index nodes the process accessed : " << num_3 << endl;
+    cout << "Number of data blocks the process accessed : " <<  "To Be Filled"  << endl;
 
     /*
     Experiment 4:
@@ -135,6 +135,9 @@ int main() {
     */
      
     cout << "-----------------Experiment 4-----------------" << endl;
+   /* int num_4 = newTree.searchNode(30000, 40000);
+    cout << "Number of index nodes the process accessed : " << num_4 << endl;
+    cout << "Number of data blocks the process accessed : " <<  "To Be Filled"  << endl;*/
 
     /*
     Experiment 5:

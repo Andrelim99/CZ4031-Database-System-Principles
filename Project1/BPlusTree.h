@@ -6,6 +6,8 @@
 
 #include<iostream>
 #include<string>
+#include "MemoryPool.h"
+
 using namespace std;
 //Declare all the classes as well as its functions in header files
 
@@ -47,7 +49,7 @@ public:
     Node* searchParent(Node* cur, Node* child);
     int getHeightOfTree(Node* cur);
     Node* getRootOfTree();
-    int searchNode(int key);
+    int searchNode(int lower_bound, int upper_bound);
     int findPositionInNode(Node* cur, const key& numVotes, int numOfKeys);
     int findPositionInArray(struct key keys[], const key& numVotes, int numOfKeys);
     void shiftKeysInNode(Node* cur, int position, int numOfKeys);
@@ -56,6 +58,7 @@ public:
     void shiftPtrInArray(Node **nodePointers, int position, int numOfKeys);
     void display(Node* cur);
     void displayNode(Node* cur);
+    void displayRecord(Record *rec);
 };
 
 #endif //CZ4031_PROJ1_BPLUSTREE_H
