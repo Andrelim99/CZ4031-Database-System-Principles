@@ -28,14 +28,16 @@ struct Block{
 //    Record * recPointer;
     int remainingCapacity;
     int numRecords;
+    bool hasBeenAccessed;
 };
 
 
 class MemoryPool {
 private:
-    int numBlocks, blockSize, dbSize, availableNumBlocks, curBlockIndex;
+    int numBlocks, blockSize, dbSize, availableNumBlocks, curBlockIndex, blockAccessCounter;
     unsigned char * startBlockPtr, *startMemoryPtr;
     vector<Block> blocks;
+    vector<int> blockAccessedList;
 
 
 
@@ -54,7 +56,8 @@ public:
     void displayFirstNBlocks(int n);
     void displayBlock(int i);
     void displayDatablockBasedOnRecordAddress(void * ptr);
-
+    void displayBlocksFromXToY(int x, int y);
+    void displayBlocksAccessed();
     void printMemoryPoolDetails();
 
     tuple<int, int> convertRecordAddressToBlockOffset(void * ptr);
@@ -71,6 +74,9 @@ public:
 
     int getDbSize();
 
+    void computeDatablockAccessed(vector<void *> recAddresses);
+
+    void resetBlocksAccessed();
 
 };
 

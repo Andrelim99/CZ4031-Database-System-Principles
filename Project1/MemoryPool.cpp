@@ -21,6 +21,7 @@ MemoryPool::MemoryPool(int blockSize) {
     this->dbSize = 0;
     this->startMemoryPtr = new unsigned char[DISK_CAPACITY];
     this->curBlockIndex = 0;
+    this->blockAccessCounter = 0;
 
     //    Declare blocks array
     for(int i = 0; i < numBlocks; i++){
@@ -28,6 +29,7 @@ MemoryPool::MemoryPool(int blockSize) {
 //        newBlock.recPointer = nullptr;
         newBlock.numRecords = 0;
         newBlock.remainingCapacity = blockSize;
+        newBlock.hasBeenAccessed = false;
         this->blocks.push_back(newBlock);
     }
 }
@@ -128,10 +130,29 @@ void MemoryPool::displayFirstNBlocks(int n) {
     }
 }
 
+void MemoryPool::displayBlocksFromXToY(int x, int y) {
+    if(y > curBlockIndex){
+        cout << "Block " << y << "exceeds current max block of " << curBlockIndex << endl;
+        y = curBlockIndex;
+    }
+    cout << "Printing Blocks from block " << x << " to " << y << endl;
+    for(int i = x; i < y; i++){
+        displayBlock(i);
+    }
+}
+
 void MemoryPool::displayDatablockBasedOnRecordAddress(void *ptr) {
     tuple<int, int> converted = convertRecordAddressToBlockOffset(ptr);
     int blockId = get<0>(converted);
     displayBlock(blockId);
+}
+
+void MemoryPool::displayBlocksAccessed() {
+    unsigned int vecSize = blockAccessedList.size();
+    if(vecSize > 5) vecSize = 5;
+    for(unsigned int i = 0; i < vecSize; i++){
+        displayBlock(i);
+    }
 }
 
 void MemoryPool::printMemoryPoolDetails() {
@@ -146,6 +167,42 @@ void MemoryPool::printMemoryPoolDetails() {
 
     cout << "Record size: " << RECORD_SIZE << "B" << endl;
 }
+
+
+void MemoryPool::computeDatablockAccessed(vector<void *> recAddresses) {
+/*
+ * For each rec address
+ * Find out which block
+ * Change block access tag to true
+ * increment counter
+ */
+    unsigned int vecSize = recAddresses.size();
+    for(unsigned int i = 0; i < vecSize; i++){
+        tuple<int, int> curTuple = convertRecordAddressToBlockOffset(recAddresses[i]);
+        int tmpBlockId = get<0>(curTuple);
+
+        if(blocks[tmpBlockId].hasBeenAccessed == false){
+            blockAccessCounter++;
+            blocks[tmpBlockId].hasBeenAccessed = true;
+            blockAccessedList.push_back(tmpBlockId);
+        }
+    }
+}
+
+void MemoryPool::resetBlocksAccessed() {
+    /*
+     * Reset all blocks accessed value, Access Counter, blockAccessedList
+     */
+    unsigned int vecSize = blockAccessedList.size();
+    for(unsigned int i = 0; i < vecSize; i++){
+        blocks[blockAccessedList[i]].hasBeenAccessed = false;
+    }
+    blockAccessedList.clear();
+    blockAccessCounter = 0;
+}
+
+
+
 
 tuple<int, int> MemoryPool::convertRecordAddressToBlockOffset(void *ptr) {
 //    Find block id
