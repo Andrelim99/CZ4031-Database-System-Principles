@@ -206,11 +206,12 @@ Node* BPlusTree::getRootOfTree(){
     return root;
 }
 
-int BPlusTree::searchNode(int lower_bound, int upper_bound){
+vector<void*> BPlusTree::searchNode(int lower_bound, int upper_bound){
+    vector<void*> res;
     if(root == NULL)
     {
         cout << "B+ Tree is empty!" << endl;
-        return 0;
+        return res;
     }
     else
     {
@@ -265,6 +266,7 @@ int BPlusTree::searchNode(int lower_bound, int upper_bound){
                 if (cur->keys[i].keyValue >= lower_bound && cur->keys[i].keyValue <= upper_bound)
                 {
                     Record* rec = static_cast<Record *>(cur->keys[i].address[0]);
+                    res.push_back(rec);
                     displayRecord(rec);
                     sum += rec->averageRating;
                     num_rec++;
@@ -280,6 +282,7 @@ int BPlusTree::searchNode(int lower_bound, int upper_bound){
                 flag = true;
             }
         }
+        std::cout << "Number of index nodes accessed: " << nodecount << endl;
         if (num_rec == 0){
             std::cout << "No records found!" << endl;
         }
@@ -287,7 +290,7 @@ int BPlusTree::searchNode(int lower_bound, int upper_bound){
             std::cout << "Number of records: " << num_rec << endl;
             std::cout << "Average rating of 'averageRatings': " << sum / num_rec << endl;
         }
-        return nodecount;
+        return res;
     }
 }
 

@@ -49,7 +49,7 @@ public:
     Node* searchParent(Node* cur, Node* child);
     int getHeightOfTree(Node* cur);
     Node* getRootOfTree();
-    int searchNode(int lower_bound, int upper_bound);
+    vector<void *> searchNode(int lower_bound, int upper_bound);
     int findPositionInNode(Node* cur, const key& numVotes, int numOfKeys);
     int findPositionInArray(struct key keys[], const key& numVotes, int numOfKeys);
     void shiftKeysInNode(Node* cur, int position, int numOfKeys);
