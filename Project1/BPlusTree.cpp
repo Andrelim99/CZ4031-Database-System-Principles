@@ -47,7 +47,8 @@ void BPlusTree::insertKey(const key& numVotes){
             parent = cursor;
             //This for loop helps to traverse the node to the correct pointer.
             for(int i = 0; i< cursor->numOfKeys; i++){
-                if(numVotes.keyValue < cursor->keys[i].keyValue){
+                //Might be subjected to changes
+                if(numVotes.keyValue <= cursor->keys[i].keyValue){
                     cursor = cursor -> nodePtr[i];
                     break;
                 }
@@ -84,8 +85,7 @@ void BPlusTree::insertKey(const key& numVotes){
             int rightNodeKeyCount = floor((float)(MAX_NODE_KEYS+1)/2);
             cursor->numOfKeys = leftNodeKeyCount;
             newNode->numOfKeys = rightNodeKeyCount;
-
-            cursor->nodePtr [cursor->numOfKeys] = newNode;
+            cursor->nodePtr[cursor->numOfKeys] = newNode;
             newNode->nodePtr[newNode->numOfKeys] = cursor->nodePtr[MAX_NODE_KEYS];
             cursor->nodePtr[MAX_NODE_KEYS] = nullptr;
 
@@ -203,7 +203,7 @@ void BPlusTree::removeInternal(Node* cur, Node* child, const key& numVotes){
 
 Node* BPlusTree::searchParent(Node* cur, Node* child){
     Node *search;
-    if(cur -> leafNode){
+    if(cur -> leafNode  || (cur->nodePtr[0])->leafNode){
         return nullptr;
     }
     for(int i = 0; i < cur->numOfKeys+1; i++){
@@ -262,7 +262,7 @@ vector<void*> BPlusTree::searchNode(int lower_bound, int upper_bound){
             for(int i = 0; i < cur->numOfKeys; i++)
             {
                 // if search key is smaller than a key in node
-                if(lower_bound < cur->keys[i].keyValue)
+                if(lower_bound <= cur->keys[i].keyValue)
                 {
                     cur = cur->nodePtr[i];
                     flag = false;
@@ -333,7 +333,7 @@ vector<void*> BPlusTree::searchNode(int lower_bound, int upper_bound){
 void BPlusTree::display(Node* cur){
     //Function to display the content of the root node and its 1st child nodes
     if (cur != NULL) {
-        cout << "Root" << endl;
+        cout << "Root: " << endl;
         displayNode(cur);
 
         cout << "Level 1 : " << endl;
@@ -366,6 +366,7 @@ void BPlusTree::displayNode(Node* cur) {
     {
         cout << cur->keys[i].keyValue << "|";
     }
+    cout<<endl;
 }
 
 int BPlusTree::findPositionInNode(Node* cur, const key& numVotes, int numOfKeys){

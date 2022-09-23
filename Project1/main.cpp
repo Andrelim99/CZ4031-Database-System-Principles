@@ -28,7 +28,7 @@ int main() {
         getline(dataFile, line);
         int counter = 0;
         while(getline(dataFile, line)
-        && counter < 100000
+//        && counter < 100000
         ){
             stringstream s(line);
             string s1, s2, s3;
@@ -74,6 +74,9 @@ int main() {
             keyStruct.address.push_back((unsigned char *)get<0>(tmpTuple) + i * 20);
             Record tmpRec = mempool.getRecord(blockIndex, i);
             keyStruct.keyValue = tmpRec.numVotes;
+            if(count == 81){
+                cout<<endl;
+            }
             newTree.insertKey(keyStruct);
             count++;
 
@@ -136,7 +139,7 @@ int main() {
     - The average of “averageRating’s” of the records that are returned;
     */
      
-    cout << "-----------------Experiment 4-----------------" << endl;
+//    cout << "-----------------Experiment 4-----------------" << endl;
     /*vector<void*> rec_address_4 = newTree.searchNode(500,2000);
     for (void* x : rec_address_4)
         cout << x << " ";
@@ -152,7 +155,7 @@ int main() {
     - The content of the root node and its 1st child node of the updated B+ tree;
     */
     
-    cout << "-----------------Experiment 5-----------------" << endl;
+//    cout << "-----------------Experiment 5-----------------" << endl;
 
     return 0;
 
