@@ -28,7 +28,7 @@ int main() {
         getline(dataFile, line);
         int counter = 0;
         while(getline(dataFile, line)
-//        && counter < 100000
+        && counter < 100000
         ){
             stringstream s(line);
             string s1, s2, s3;
@@ -117,10 +117,10 @@ int main() {
 
     /*
     Experiment 3:
-    Retrieve those movies with the “numVotes” equal to 500 and report the following statistics:
+    Retrieve those movies with the ï¿½numVotesï¿½ equal to 500 and report the following statistics:
     - The number and the content of index nodes the process accesses;
     - The number and the content of data blocks the process accesses;
-    - The average of “averageRating’s” of the records that are returned;
+    - The average of ï¿½averageRatingï¿½sï¿½ of the records that are returned;
     */
 
     cout << "-----------------Experiment 3-----------------" << endl;
@@ -129,14 +129,18 @@ int main() {
     for (void* x : rec_address_3)
         cout << x << " ";
     cout << endl;
-    cout << "Number of data blocks the process accessed : " <<  "To Be Filled"  << endl;
+
+    // Print datablocks that were accessed based on records found.
+    mempool.computeDatablockAccessed(rec_address_3);
+    mempool.displayBlocksAccessed();
+
 
     /*
     Experiment 4:
-    Retrieve those movies with the attribute “numVotes” from 30,000 to 40,000, both inclusively and report the following statistics:
+    Retrieve those movies with the attribute ï¿½numVotesï¿½ from 30,000 to 40,000, both inclusively and report the following statistics:
     - The number and the content of index nodes the process accesses;
     - The number and the content of data blocks the process accesses;
-    - The average of “averageRating’s” of the records that are returned;
+    - The average of ï¿½averageRatingï¿½sï¿½ of the records that are returned;
     */
      
 //    cout << "-----------------Experiment 4-----------------" << endl;
@@ -144,11 +148,13 @@ int main() {
     for (void* x : rec_address_4)
         cout << x << " ";
     cout << endl;
-    cout << "Number of data blocks the process accessed : " <<  "To Be Filled"  << endl;*/
+    // Print datablocks that were accessed based on records found.
+    mempool.computeDatablockAccessed(rec_address_3);
+    mempool.displayBlocksAccessed();
 
     /*
     Experiment 5:
-    Delete those movies with the attribute “numVotes” equal to 1,000, update the B+ tree accordingly, and report the following statistics:   
+    Delete those movies with the attribute ï¿½numVotesï¿½ equal to 1,000, update the B+ tree accordingly, and report the following statistics:   
     - The number of times that a node is deleted (or two nodes are merged) during the process of the updating the B+ tree;
     - The number nodes of the updated B+ tree;
     - The height of the updated B+ tree;

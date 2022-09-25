@@ -149,10 +149,14 @@ void MemoryPool::displayDatablockBasedOnRecordAddress(void *ptr) {
 
 void MemoryPool::displayBlocksAccessed() {
     unsigned int vecSize = blockAccessedList.size();
+    cout << "Number of unique blocks accessed: " << vecSize << endl;
     if(vecSize > 5) vecSize = 5;
+    cout << "Printing " << vecSize << " datablocks:" << endl;
     for(unsigned int i = 0; i < vecSize; i++){
         displayBlock(i);
     }
+//    Reset
+    resetBlocksAccessed();
 }
 
 void MemoryPool::printMemoryPoolDetails() {
@@ -163,7 +167,7 @@ void MemoryPool::printMemoryPoolDetails() {
 
     cout << "Block size: " << blockSize << "B" << endl;
     cout << "Total number of blocks: " << numBlocks << endl;
-    cout << "Number of blocks used: " << numBlocks-availableNumBlocks << endl << endl;
+    cout << "Number of blocks used: " << curBlockIndex+1 << endl << endl;
 
     cout << "Record size: " << RECORD_SIZE << "B" << endl;
 }
