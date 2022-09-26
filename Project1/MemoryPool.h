@@ -46,7 +46,7 @@ private:
 
 public:
     const int DISK_CAPACITY = 200000000; // 200MB, not using standard 2^20 value for simplicity
-    const int RECORD_SIZE = 20;
+    const int RECORD_SIZE = sizeof(Record);
     MemoryPool(int blockSize);
 
 //    ~MemoryPool();
