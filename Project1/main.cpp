@@ -132,7 +132,8 @@ int main() {
 
     // Print datablocks that were accessed based on records found.
     mempool.computeDatablockAccessed(rec_address_3);
-//    mempool.displayBlocksAccessed();
+    mempool.displayBlocksAccessed();
+    std::cout<<endl;
 
 
     /*
@@ -143,14 +144,15 @@ int main() {
     - The average of �averageRating�s� of the records that are returned;
     */
      
-//    cout << "-----------------Experiment 4-----------------" << endl;
-    vector<void*> rec_address_4 = newTree.searchNode(30000,40000);
+    cout << "-----------------Experiment 4-----------------" << endl;
+    vector<void*> rec_address_4 = newTree.searchNode(29999,40000);
 /*    for (void* x : rec_address_4)
         cout << x << " ";
     cout << endl;*/
     // Print datablocks that were accessed based on records found.
     mempool.computeDatablockAccessed(rec_address_3);
-    // mempool.displayBlocksAccessed();
+    mempool.displayBlocksAccessed();
+    std::cout<<endl;
 
     /*
     Experiment 5:

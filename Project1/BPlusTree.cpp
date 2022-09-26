@@ -344,12 +344,8 @@ void BPlusTree::display(Node* cur){
         displayNode(cur);
 
         cout << "Level 1 : " << endl;
-        //Display the contents of the 1st child nodes
-        for (int i = 0; i <= cur->numOfKeys; i++)
-        {
-            displayNode(cur->nodePtr[i]);
-            cout << "   ";
-        }
+        //Display the contents of the 1st child node
+        displayNode(cur->nodePtr[0]);
         cout << endl;
     }
     else
