@@ -50,6 +50,7 @@ int main() {
         mempool.displayFirstNBlocks(5);
     }
 
+    cout << "---------------- Experiment 1-----------------" << endl;
     mempool.printMemoryPoolDetails();
 
 //    Get all record address via block (Shows block access)

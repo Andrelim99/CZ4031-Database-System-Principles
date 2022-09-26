@@ -160,16 +160,17 @@ void MemoryPool::displayBlocksAccessed() {
 }
 
 void MemoryPool::printMemoryPoolDetails() {
-    cout << "Printing Memory Pool Details..." << endl;
+    cout << "Printing Memory Pool Details..." << endl << endl;
     cout << "Total Memory Capacity: " << DISK_CAPACITY/MB << "MB" << endl;
     cout << "Available Memory Capacity: " << (float)(DISK_CAPACITY - dbSize)/MB << "MB" << endl;
-    cout << "Memory Used (DB Size): " << (float)dbSize/MB << "MB" << endl << endl;
+    cout << "Database Size (Memory Used): " << (float)dbSize/MB << "MB" << endl << endl;
 
     cout << "Block size: " << blockSize << "B" << endl;
     cout << "Total number of blocks: " << numBlocks << endl;
     cout << "Number of blocks used: " << curBlockIndex+1 << endl << endl;
 
     cout << "Record size: " << RECORD_SIZE << "B" << endl;
+    cout << "-----------------End of print ----------------" << endl;
 }
 
 
