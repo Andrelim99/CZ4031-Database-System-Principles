@@ -125,14 +125,14 @@ int main() {
 
     cout << "-----------------Experiment 3-----------------" << endl;
     // retrieving number of index nodes accessed as well as printing content of index nodes
-    vector<void*> rec_address_3 = newTree.searchNode(500,2000);
-    for (void* x : rec_address_3)
-        cout << x << " ";
-    cout << endl;
+    vector<void*> rec_address_3 = newTree.searchNode(499,500);
+//    for (void* x : rec_address_3)
+//        cout << x << " ";
+//    cout << endl;
 
     // Print datablocks that were accessed based on records found.
     mempool.computeDatablockAccessed(rec_address_3);
-    mempool.displayBlocksAccessed();
+//    mempool.displayBlocksAccessed();
 
 
     /*
@@ -144,13 +144,13 @@ int main() {
     */
      
 //    cout << "-----------------Experiment 4-----------------" << endl;
-    /*vector<void*> rec_address_4 = newTree.searchNode(500,2000);
-    for (void* x : rec_address_4)
+    vector<void*> rec_address_4 = newTree.searchNode(30000,40000);
+/*    for (void* x : rec_address_4)
         cout << x << " ";
-    cout << endl;
+    cout << endl;*/
     // Print datablocks that were accessed based on records found.
     mempool.computeDatablockAccessed(rec_address_3);
-    mempool.displayBlocksAccessed();
+    // mempool.displayBlocksAccessed();
 
     /*
     Experiment 5:

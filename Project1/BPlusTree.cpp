@@ -48,7 +48,7 @@ void BPlusTree::insertKey(const key& numVotes){
             //This for loop helps to traverse the node to the correct pointer.
             for(int i = 0; i< cursor->numOfKeys; i++){
                 //Might be subjected to changes
-                if(numVotes.keyValue <= cursor->keys[i].keyValue){
+                if(numVotes.keyValue < cursor->keys[i].keyValue){
                     cursor = cursor -> nodePtr[i];
                     break;
                 }
@@ -252,8 +252,8 @@ vector<void*> BPlusTree::searchNode(int lower_bound, int upper_bound){
     else
     {
         Node* cur = root;
+        std::cout<<"Root Node:"<<endl;
         displayNode(cur);
-        cout << endl;
         int nodecount = 1;
         // Travel to leaf node
         while(!cur->leafNode)
@@ -262,7 +262,7 @@ vector<void*> BPlusTree::searchNode(int lower_bound, int upper_bound){
             for(int i = 0; i < cur->numOfKeys; i++)
             {
                 // if search key is smaller than a key in node
-                if(lower_bound <= cur->keys[i].keyValue)
+                if(lower_bound < cur->keys[i].keyValue)
                 {
                     cur = cur->nodePtr[i];
                     flag = false;
@@ -276,8 +276,8 @@ vector<void*> BPlusTree::searchNode(int lower_bound, int upper_bound){
             }
             // Only display content for the first 5 index nodes
             if (nodecount <= 5) {
+                std::cout<< "Index Node: "<<nodecount<<endl;
                 displayNode(cur);
-                cout << endl;
             }
             nodecount++;
         }
@@ -287,11 +287,15 @@ vector<void*> BPlusTree::searchNode(int lower_bound, int upper_bound){
         bool exceed = false;
         float sum = 0;
         float num_rec = 0;
+        int print_counter = 1;
         while (not flag) {
+            //std::cout << endl;
             int i;
-            std::cout << "Leaf node: ";
-            displayNode(cur);
-            std::cout << endl;
+            if (print_counter <= 5)
+            {
+                std::cout << "Leaf node: " << print_counter << endl;
+                displayNode(cur);
+            }
             for (i = 0; i < cur->numOfKeys; i++) {
                 // Found a key within range, now we need to iterate through the entire range until the upperBoundKey.
                 if (cur->keys[i].keyValue > upper_bound) {
@@ -303,7 +307,10 @@ vector<void*> BPlusTree::searchNode(int lower_bound, int upper_bound){
                 {
                     Record* rec = static_cast<Record *>(cur->keys[i].address[0]);
                     res.push_back(rec);
-                    displayRecord(rec);
+                    if (print_counter<=5)
+                    {
+                        displayRecord(rec);
+                    }
                     sum += rec->averageRating;
                     num_rec++;
                 }
@@ -313,10 +320,10 @@ vector<void*> BPlusTree::searchNode(int lower_bound, int upper_bound){
             if ((cur->nodePtr[cur->numOfKeys] != nullptr) && (!exceed)) {
                 // Set cursor to be next leaf node (load from disk).
                 cur = cur->nodePtr[cur->numOfKeys];
-                std::cout << "Travelling to next node..."<<endl;
             } else {
                 flag = true;
             }
+            print_counter++;
         }
         std::cout << "Number of index nodes accessed: " << nodecount << endl;
         if (num_rec == 0){
