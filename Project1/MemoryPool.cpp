@@ -28,7 +28,7 @@ MemoryPool::MemoryPool(int blockSize) {
         Block newBlock;
 //        newBlock.recPointer = nullptr;
         newBlock.numRecords = 0;
-        newBlock.remainingCapacity = blockSize;
+        newBlock.remainingCapacity = blockSize-sizeof(Block);
         newBlock.hasBeenAccessed = false;
         this->blocks.push_back(newBlock);
     }
