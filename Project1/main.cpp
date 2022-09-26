@@ -133,7 +133,7 @@ int main() {
 
     // Print datablocks that were accessed based on records found.
     mempool.computeDatablockAccessed(rec_address_3);
-    mempool.displayBlocksAccessed();
+
     std::cout<<endl;
 
 
@@ -151,8 +151,8 @@ int main() {
         cout << x << " ";
     cout << endl;*/
     // Print datablocks that were accessed based on records found.
-    mempool.computeDatablockAccessed(rec_address_3);
-    mempool.displayBlocksAccessed();
+    mempool.computeDatablockAccessed(rec_address_4);
+
     std::cout<<endl;
 
     /*

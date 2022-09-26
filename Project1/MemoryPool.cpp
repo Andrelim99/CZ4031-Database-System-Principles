@@ -150,11 +150,6 @@ void MemoryPool::displayDatablockBasedOnRecordAddress(void *ptr) {
 void MemoryPool::displayBlocksAccessed() {
     unsigned int vecSize = blockAccessedList.size();
     cout << "Number of unique blocks accessed: " << vecSize << endl;
-    if(vecSize > 5) vecSize = 5;
-    cout << "Printing " << vecSize << " datablocks:" << endl;
-    for(unsigned int i = 0; i < vecSize; i++){
-        displayBlock(i);
-    }
 //    Reset
     resetBlocksAccessed();
 }
@@ -181,17 +176,28 @@ void MemoryPool::computeDatablockAccessed(vector<void *> recAddresses) {
  * Change block access tag to true
  * increment counter
  */
+
+    cout << endl << "-------------------- Printing First 5 Blocks Accessed -----------------------" << endl;
     unsigned int vecSize = recAddresses.size();
+    int blocksPrinted = 0;
     for(unsigned int i = 0; i < vecSize; i++){
         tuple<int, int> curTuple = convertRecordAddressToBlockOffset(recAddresses[i]);
         int tmpBlockId = get<0>(curTuple);
 
-        if(blocks[tmpBlockId].hasBeenAccessed == false){
+        if(!blocks[tmpBlockId].hasBeenAccessed){
             blockAccessCounter++;
             blocks[tmpBlockId].hasBeenAccessed = true;
             blockAccessedList.push_back(tmpBlockId);
+            // Print this block upon first entry:
+            if(blocksPrinted < 5){
+//                cout<< "Blocks printed: " << blocksPrinted << endl;
+                displayBlock(tmpBlockId);
+                blocksPrinted++;
+            }
         }
     }
+//    Display overall blocks accessed and reset
+    displayBlocksAccessed();
 }
 
 void MemoryPool::resetBlocksAccessed() {
