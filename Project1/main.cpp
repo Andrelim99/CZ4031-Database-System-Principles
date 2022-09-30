@@ -125,7 +125,7 @@ int main() {
 
     cout << "-----------------Experiment 3-----------------" << endl;
     // retrieving number of index nodes accessed as well as printing content of index nodes
-    vector<void*> rec_address_3 = newTree.searchNode(499,500);
+    vector<void*> rec_address_3 = newTree.searchNode(500,500);
 //    for (void* x : rec_address_3)
 //        cout << x << " ";
 //    cout << endl;
@@ -145,7 +145,7 @@ int main() {
     */
      
     cout << "-----------------Experiment 4-----------------" << endl;
-    vector<void*> rec_address_4 = newTree.searchNode(29999,40000);
+    vector<void*> rec_address_4 = newTree.searchNode(30000,40000);
 /*    for (void* x : rec_address_4)
         cout << x << " ";
     cout << endl;*/

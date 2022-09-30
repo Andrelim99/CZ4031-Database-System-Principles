@@ -10,6 +10,7 @@
 #include "BPlusTree.h"
 #include "MemoryPool.h"
 #include <cmath>
+
 using namespace std;
 
 int MAX_NODE_KEYS = 5;
@@ -269,7 +270,7 @@ vector<void*> BPlusTree::searchNode(int lower_bound, int upper_bound){
         Node* cur = root;
         std::cout<<"Root Node:"<<endl;
         displayNode(cur);
-        int nodecount = 1;
+        int nodecount = 2;
         // Travel to leaf node
         while(!cur->leafNode)
         {
@@ -291,11 +292,12 @@ vector<void*> BPlusTree::searchNode(int lower_bound, int upper_bound){
             }
             // Only display content for the first 5 index nodes
             if (nodecount <= 5) {
-                std::cout<< "Index Node: "<<nodecount<<endl;
+                std::cout<< "Index Node "<<nodecount<< ":" << endl;
                 displayNode(cur);
             }
             nodecount++;
         }
+        nodecount--;
 
         // From lower bound node, keep searching until we find a key that is greater than upper bound
         bool flag = false;
@@ -303,12 +305,13 @@ vector<void*> BPlusTree::searchNode(int lower_bound, int upper_bound){
         float sum = 0;
         float num_rec = 0;
         int print_counter = 1;
+        int rec_counter = 1;
         while (not flag) {
             //std::cout << endl;
             int i;
             if (print_counter <= 5)
             {
-                std::cout << "Leaf node: " << print_counter << endl;
+                std::cout << "Leaf node " << print_counter << ":" << endl;
                 displayNode(cur);
             }
             for (i = 0; i < cur->numOfKeys; i++) {
@@ -320,14 +323,18 @@ vector<void*> BPlusTree::searchNode(int lower_bound, int upper_bound){
                 }
                 if (cur->keys[i].keyValue >= lower_bound && cur->keys[i].keyValue <= upper_bound)
                 {
-                    Record* rec = static_cast<Record *>(cur->keys[i].address[0]);
-                    res.push_back(rec);
-                    if (print_counter<=5)
-                    {
-                        displayRecord(rec);
+                    for (int j = 0; j < cur->keys[i].address.size(); j++){
+                        Record* rec = static_cast<Record *>(cur->keys[i].address[j]);
+                        res.push_back(rec);
+                        if (rec_counter<=5)
+                        {
+                            std::cout << "Record " << rec_counter << ": " ;
+                            displayRecord(rec);
+                            rec_counter++;
+                        }
+                        sum += rec->averageRating;
+                        num_rec++;
                     }
-                    sum += rec->averageRating;
-                    num_rec++;
                 }
             }
 
