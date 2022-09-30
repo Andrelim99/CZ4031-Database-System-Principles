@@ -28,7 +28,6 @@ int main() {
         getline(dataFile, line);
         int counter = 0;
         while(getline(dataFile, line)
-        && counter < 100000
         ){
             stringstream s(line);
             string s1, s2, s3;

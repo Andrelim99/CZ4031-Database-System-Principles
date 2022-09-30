@@ -53,12 +53,13 @@ public:
     int findPositionInNode(Node* cur, const key& numVotes, int numOfKeys);
     int findPositionInArray(struct key keys[], const key& numVotes, int numOfKeys);
     void shiftKeysInNode(Node* cur, int position, int numOfKeys);
+    void shiftKeysAndPointersInNode(Node * cur, int position, int numOfKeys);
     void shiftKeysInArray(struct key keys[], int position, int numOfKeys);
-    void shiftPtrInNode(Node* cur, int position, int numOfKeys);
-    void shiftPtrInArray(Node **nodePointers, int position, int numOfKeys);
+    void shiftKeysAndPointersInArray(Node **nodePointers, struct key keys[], int position, int numOfKeys);
     void display(Node* cur);
     void displayNode(Node* cur);
     void displayRecord(Record *rec);
+    Node* searchDupKey(int numVotes);
 };
 
 #endif //CZ4031_PROJ1_BPLUSTREE_H
