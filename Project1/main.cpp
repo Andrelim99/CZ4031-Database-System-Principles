@@ -21,11 +21,11 @@ int main() {
 
         ifstream dataFile("../Project1/data.tsv");
 
-//Loading of data into memory
+        //Loading of data into memory
         cout << "Loading dataset into memory..." << endl;
         if(dataFile.is_open()){
             string line;
-//        Remove header
+            //Remove header
             getline(dataFile, line);
             int counter = 0;
             while(getline(dataFile, line)
@@ -37,7 +37,6 @@ int main() {
                 strcpy(newRecord.tconst, line.substr(0, line.find('\t')).c_str());
                 newRecord.averageRating = stof(s2);
                 newRecord.numVotes = stoi(s3);
-//            cout << "Inserting Record: " << newRecord.tconst << endl;
                 if(!mempool.insertRecord(newRecord)){
                     cout << "Record not inserted!" << endl;
                 }
@@ -53,7 +52,7 @@ int main() {
         cout << "---------------- Experiment 1-----------------" << endl;
         mempool.printMemoryPoolDetails();
 
-//    Get all record address via block (Shows block access)
+        //Get all record address via block (Shows block access)
         int blockIndex = 0;
         tuple<void*, Block> tmpTuple = mempool.getBlockI(blockIndex);
         Block tmpBlk = get<1>(tmpTuple);
@@ -68,10 +67,10 @@ int main() {
         BPlusTree newTree(size);
         int count = 0;
         while(tmpBlk.numRecords > 0){
-//        Save records into B+ tree
+        //Save records into B+ tree
             for(int i = 0;  i < tmpBlk.numRecords; i++){
                 key keyStruct;
-//            Pass ADDRESS of RECORD and numVotes
+                //Pass ADDRESS of RECORD and numVotes
                 keyStruct.address.push_back((unsigned char *)get<0>(tmpTuple) + i * 20);
                 Record tmpRec = mempool.getRecord(blockIndex, i);
                 keyStruct.keyValue = tmpRec.numVotes;
@@ -80,21 +79,10 @@ int main() {
                 }
                 newTree.insertKey(keyStruct);
                 count++;
-
-//            Testing
-//            cout << "Address: " << keyStruct.address[0] << "\t" << "Key value: " << keyStruct.key << endl;
-
-
-//            Call insert key to B+ tree function here!
-
-
-
             }
 
-
-
             blockIndex++;
-//        Get next tuple
+            //Get next tuple
             tmpTuple = mempool.getBlockI(blockIndex);
             tmpBlk = get<1>(tmpTuple);
         }
@@ -127,15 +115,10 @@ int main() {
         cout << "-----------------Experiment 3-----------------" << endl;
         // retrieving number of index nodes accessed as well as printing content of index nodes
         vector<void*> rec_address_3 = newTree.searchNode(500,500);
-//    for (void* x : rec_address_3)
-//        cout << x << " ";
-//    cout << endl;
-
         // Print datablocks that were accessed based on records found.
         mempool.computeDatablockAccessed(rec_address_3);
 
         std::cout<<endl;
-
 
         /*
         Experiment 4:
@@ -147,11 +130,7 @@ int main() {
 
         cout << "-----------------Experiment 4-----------------" << endl;
         vector<void*> rec_address_4 = newTree.searchNode(30000,40000);
-    /*
-        for (void* x : rec_address_4)
-            cout << x << " ";
-        cout << endl;
-    */
+
         // Print datablocks that were accessed based on records found.
         mempool.computeDatablockAccessed(rec_address_4);
 
@@ -169,15 +148,15 @@ int main() {
        cout << "-----------------Experiment 5-----------------" << endl;
        //int node_del_count = newTree.remove(1000);
 
-//       vector<void*> rec_address_5 = newTree.searchNode(1000,1000);
-//       mempool.computeDatablockAccessed(rec_address_5);
+        // vector<void*> rec_address_5 = newTree.searchNode(1000,1000);
+        // mempool.computeDatablockAccessed(rec_address_5);
         int pre = newTree.countNodes(newTree.getRootOfTree());
         cout << "Number of nodes before Deletion        :" << pre << endl;
        newTree.removeKey(1000);
         int post = newTree.countNodes(newTree.getRootOfTree());;
 
-//       vector<void*> rec_address_6 = newTree.searchNode(1000,1000);
-//       mempool.computeDatablockAccessed(rec_address_6);
+        // vector<void*> rec_address_6 = newTree.searchNode(1000,1000);
+        // mempool.computeDatablockAccessed(rec_address_6);
         cout << "Height of updated B+ Tree              : " << newTree.getHeightOfTree(newTree.getRootOfTree()) << endl;
         cout << "Number of nodes after Deletion         :" << post<< endl;
         cout << "Number of nodes deleted/merged         : " << post-pre << endl;
@@ -187,9 +166,5 @@ int main() {
         std::cout<<endl;
         cout << "-----------------End of blocksize " <<  size << "-----------------" << endl << endl;
     }
-
-
     return 0;
-
-
 }

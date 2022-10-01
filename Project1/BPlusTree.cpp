@@ -3,9 +3,6 @@
 //
 #include<iostream>
 #include<string>
-#include<sstream>
-#include<fstream>
-#include<climits>
 #include<vector>
 #include "BPlusTree.h"
 #include "MemoryPool.h"
@@ -41,15 +38,10 @@ void BPlusTree::insertKey(const key& numVotes){
         root->keys[0] = numVotes;
         root->numOfKeys=1;
         root->leafNode = true;
-
-        //Part of the function verified.
     }
     else {
-        //Instantiate a new pointer that points toward the root for manipulation.
-        Node *cur = root;
-        //To keep track of the parent node per loop
-        Node *parentNode;
 
+        // Function searches for a node that has the same key.
         Node* dupKeyNode = searchDupKey(numVotes.keyValue);
         if (dupKeyNode != nullptr){
             for(int i = 0; i < dupKeyNode->numOfKeys; i++)
@@ -63,12 +55,16 @@ void BPlusTree::insertKey(const key& numVotes){
             return;
         }
 
+        //Instantiate a new pointer that points toward the root for manipulation.
+        Node *cur = root;
+        //To keep track of the parent node per loop
+        Node *parentNode;
+
         //This while loop helps to traverse the tree downwards, until it reaches the leaf node
         while(!cur -> leafNode){
             parentNode = cur;
             //This for loop helps to traverse the node to the correct pointer.
             for(int i = 0; i< cur->numOfKeys; i++){
-                //Might be subjected to changes
                 if(numVotes.keyValue < cur->keys[i].keyValue){
                     cur = cur-> nodePtr[i];
                     break;
@@ -78,7 +74,6 @@ void BPlusTree::insertKey(const key& numVotes){
                     break;
                 }
             }
-            //While loop is correct
         }
 
         //This condition runs only when this node is not full yet
@@ -99,11 +94,14 @@ void BPlusTree::insertKey(const key& numVotes){
                 nodeKeys[i] = cur->keys[i];
             }
             int pos = findPositionInArray(nodeKeys, numVotes, MAX_NODE_KEYS);
+            // Find Position and Shift the keys in an array
             shiftKeysInArray(nodeKeys, pos, MAX_NODE_KEYS);
             nodeKeys[pos] = numVotes;
             newNode->leafNode = true;
+            // Splitting formulas based off lectures
             int leftNodeKeyCount =  ceil((float)(MAX_NODE_KEYS+1)/2);
             int rightNodeKeyCount = floor((float)(MAX_NODE_KEYS+1)/2);
+
             cur->numOfKeys = leftNodeKeyCount;
             newNode->numOfKeys = rightNodeKeyCount;
             cur->nodePtr[cur->numOfKeys] = newNode;
@@ -124,10 +122,8 @@ void BPlusTree::insertKey(const key& numVotes){
                 newRoot->leafNode = false;
                 newRoot->numOfKeys = 1;
                 this->root = newRoot;
-                this->root = newRoot;
 
             } else{
-                //Go through the recursion
                 insertInternal(parentNode, newNode, newNode->keys[0]);
             }
         }
@@ -141,7 +137,6 @@ void BPlusTree::insertInternal(Node* cur, Node* child, const key& numVotes){
         shiftKeysAndPointersInNode(cur, pos, cur->numOfKeys);
         //Pointers will be shifted in the node
         //In this case, position will never be a 0 for shifting ptr in node
-//        shiftPtrInNode(cur,pos+1, cur->numOfKeys+1);
         cur->keys[pos] = numVotes;
         cur->nodePtr[pos+1] = child;
         cur->numOfKeys++;
@@ -157,8 +152,6 @@ void BPlusTree::insertInternal(Node* cur, Node* child, const key& numVotes){
         }
         int pos = findPositionInArray(nodeKeys,numVotes,MAX_NODE_KEYS);
         shiftKeysAndPointersInArray(nodePointers, nodeKeys, pos, MAX_NODE_KEYS);
-//        shiftKeysInArray(nodeKeys,pos,MAX_NODE_KEYS);
-//        shiftPtrInArray(nodePointers, pos+1, MAX_NODE_POINTERS);
         nodeKeys[pos] = numVotes;
         nodePointers[pos+1] = child;
         newNode->leafNode = false;
@@ -203,7 +196,7 @@ void BPlusTree::insertInternal(Node* cur, Node* child, const key& numVotes){
         int middle = (MAX_NODE_KEYS+1)/2;
         key middleKey = nodeKeys[middle];
         if(cur == root){
-            //In the keys node array, take the key in the middle, it'll be the root.
+            // In the keys node array, take the key in the middle, it'll be the root.
             Node* newRoot =  new Node;
             newRoot->keys[0] = middleKey;
             newRoot->nodePtr[0] = cur;
@@ -212,6 +205,8 @@ void BPlusTree::insertInternal(Node* cur, Node* child, const key& numVotes){
             newRoot->numOfKeys= 1;
             root = newRoot;
         }else{
+            // If the cur is not the root, a parent node already exist
+            // thus use recursion to insert into cur's parent node
             insertInternal(searchParent(root, cur), newNode, middleKey);
         }
     }
