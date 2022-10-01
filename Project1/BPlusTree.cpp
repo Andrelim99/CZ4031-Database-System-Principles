@@ -28,6 +28,10 @@ Node::Node()
     nodePtr = new Node*[MAX_NODE_POINTERS];
 }
 
+int BPlusTree::getN(){
+    return MAX_NODE_KEYS;
+}
+
 
 void BPlusTree::insertKey(const key& numVotes){
     //This function inserts a key (numVotes) into a node
@@ -119,6 +123,7 @@ void BPlusTree::insertKey(const key& numVotes){
                 newRoot->nodePtr[1] = newNode;
                 newRoot->leafNode = false;
                 newRoot->numOfKeys = 1;
+                this->root = newRoot;
                 this->root = newRoot;
 
             } else{
@@ -642,7 +647,7 @@ vector<void*> BPlusTree::searchNode(int lower_bound, int upper_bound){
         Node* cur = root;
         std::cout<<"Root Node:"<<endl;
         displayNode(cur);
-        int nodecount = 2;
+        int nodecount = 1;
         // Travel to leaf node
         while(!cur->leafNode)
         {

@@ -110,7 +110,7 @@ int main() {
         cout << "Records inserted in the B+ tree: " << count << endl;
 
         cout << "-----------------Experiment 2-----------------" << endl;
-        cout << "Parameter n of the B+ Tree      : " << endl;
+        cout << "Parameter n of the B+ Tree      : " << newTree.getN() << endl;
         cout << "Number of nodes of the B+ Tree  : " << newTree.countNodes(newTree.getRootOfTree())<< endl;
         cout << "Height of the B+ Tree           : " << newTree.getHeightOfTree(newTree.getRootOfTree()) << endl;
         cout << "Content of Root Node and its 1st Child : " << endl;
@@ -171,13 +171,21 @@ int main() {
 
 //       vector<void*> rec_address_5 = newTree.searchNode(1000,1000);
 //       mempool.computeDatablockAccessed(rec_address_5);
+        int pre = newTree.countNodes(newTree.getRootOfTree());
+        cout << "Number of nodes before Deletion        :" << pre << endl;
        newTree.removeKey(1000);
-       cout << "Number of time node is deleted/merged: " << endl;
+        int post = newTree.countNodes(newTree.getRootOfTree());;
+
 //       vector<void*> rec_address_6 = newTree.searchNode(1000,1000);
 //       mempool.computeDatablockAccessed(rec_address_6);
-       cout << "Height of updated B+ Tree           : " << newTree.getHeightOfTree(newTree.getRootOfTree()) << endl;
-        cout << "Number of nodes in updated B+ Tree :" <<newTree.countNodes(newTree.getRootOfTree()) << endl;
-       cout << "-----------------End of blocksize " <<  size << "-----------------" << endl << endl;
+        cout << "Height of updated B+ Tree              : " << newTree.getHeightOfTree(newTree.getRootOfTree()) << endl;
+        cout << "Number of nodes after Deletion         :" << post<< endl;
+        cout << "Number of nodes deleted/merged         : " << post-pre << endl;
+        cout << "Search for records with numVotes = 1000: " << endl;
+        vector<void*> rec_address_5 = newTree.searchNode(1000,1000);
+        mempool.computeDatablockAccessed(rec_address_5);
+        std::cout<<endl;
+        cout << "-----------------End of blocksize " <<  size << "-----------------" << endl << endl;
     }
 
 
