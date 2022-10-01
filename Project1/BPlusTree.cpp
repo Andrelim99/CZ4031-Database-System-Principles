@@ -13,8 +13,14 @@
 
 using namespace std;
 
-int MAX_NODE_KEYS = 12; //5
-int MAX_NODE_POINTERS = MAX_NODE_KEYS + 1;
+int MAX_NODE_KEYS;
+int MAX_NODE_POINTERS;
+
+BPlusTree::BPlusTree(int blockSize){
+    root = nullptr;
+    MAX_NODE_KEYS = (int) ((blockSize -5)/40);
+    MAX_NODE_POINTERS = MAX_NODE_KEYS+1;
+}
 
 Node::Node()
 {
@@ -22,9 +28,6 @@ Node::Node()
     nodePtr = new Node*[MAX_NODE_POINTERS];
 }
 
-BPlusTree::BPlusTree(){
-    root = nullptr;
-}
 
 void BPlusTree::insertKey(const key& numVotes){
     //This function inserts a key (numVotes) into a node

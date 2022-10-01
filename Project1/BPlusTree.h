@@ -41,7 +41,7 @@ private:
     Node *root;
 public:
     //Set the constructor and methods of BPlusTree
-    BPlusTree();
+    BPlusTree(int blockSize);
     void insertKey(const key& numVotes);
     void insertInternal(Node* cur, Node* child, const key& numVotes);
     void removeKey(const int numVotes);

@@ -65,7 +65,7 @@ int main() {
  */
 
         //Initialize B+ tree to insert keys
-        BPlusTree newTree;
+        BPlusTree newTree(size);
         int count = 0;
         while(tmpBlk.numRecords > 0){
 //        Save records into B+ tree
