@@ -147,9 +147,11 @@ int main() {
 
         cout << "-----------------Experiment 4-----------------" << endl;
         vector<void*> rec_address_4 = newTree.searchNode(30000,40000);
-/*    for (void* x : rec_address_4)
-        cout << x << " ";
-    cout << endl;*/
+    /*
+        for (void* x : rec_address_4)
+            cout << x << " ";
+        cout << endl;
+    */
         // Print datablocks that were accessed based on records found.
         mempool.computeDatablockAccessed(rec_address_4);
 
@@ -164,9 +166,11 @@ int main() {
         - The content of the root node and its 1st child node of the updated B+ tree;
         */
 
-//    cout << "-----------------Experiment 5-----------------" << endl;
-
-        cout << "-----------------End of blocksize " <<  size << "-----------------" << endl << endl;
+       cout << "-----------------Experiment 5-----------------" << endl;
+       //int node_del_count = newTree.remove(1000);
+       newTree.remove(1000);
+       cout << "Number of time node is deleted/merged: " << endl;
+       cout << "-----------------End of blocksize " <<  size << "-----------------" << endl << endl;
     }
 
 
