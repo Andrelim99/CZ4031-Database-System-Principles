@@ -111,7 +111,7 @@ int main() {
 
         cout << "-----------------Experiment 2-----------------" << endl;
         cout << "Parameter n of the B+ Tree      : " << endl;
-        cout << "Number of nodes of the B+ Tree  : " << endl;
+        cout << "Number of nodes of the B+ Tree  : " << newTree.countNodes(newTree.getRootOfTree())<< endl;
         cout << "Height of the B+ Tree           : " << newTree.getHeightOfTree(newTree.getRootOfTree()) << endl;
         cout << "Content of Root Node and its 1st Child : " << endl;
         newTree.display(newTree.getRootOfTree());
@@ -169,13 +169,14 @@ int main() {
        cout << "-----------------Experiment 5-----------------" << endl;
        //int node_del_count = newTree.remove(1000);
 
-        vector<void*> rec_address_5 = newTree.searchNode(1000,1000);
-        mempool.computeDatablockAccessed(rec_address_5);
+//       vector<void*> rec_address_5 = newTree.searchNode(1000,1000);
+//       mempool.computeDatablockAccessed(rec_address_5);
        newTree.removeKey(1000);
        cout << "Number of time node is deleted/merged: " << endl;
-       vector<void*> rec_address_6 = newTree.searchNode(1000,1000);
-       mempool.computeDatablockAccessed(rec_address_6);
+//       vector<void*> rec_address_6 = newTree.searchNode(1000,1000);
+//       mempool.computeDatablockAccessed(rec_address_6);
        cout << "Height of updated B+ Tree           : " << newTree.getHeightOfTree(newTree.getRootOfTree()) << endl;
+        cout << "Number of nodes in updated B+ Tree :" <<newTree.countNodes(newTree.getRootOfTree()) << endl;
        cout << "-----------------End of blocksize " <<  size << "-----------------" << endl << endl;
     }
 

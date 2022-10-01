@@ -846,4 +846,20 @@ Node* BPlusTree::searchDupKey(int numVotes)
     return nullptr;
 }
 
-//int BPlusTree::
+int BPlusTree::countNodes(Node* cur) {
+    if(cur == NULL)
+    {
+        cout << "B+ Tree is empty!" << endl;
+        return 0;
+    }
+    else if (cur->leafNode){
+        return 1;
+    }
+    else {
+        int total = 0;
+        for (int i = 0; i < cur->numOfKeys; i++) {
+            total += countNodes(cur->nodePtr[i]);
+        }
+        return total;
+    }
+}

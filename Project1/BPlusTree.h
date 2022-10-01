@@ -60,6 +60,7 @@ public:
     void displayNode(Node* cur);
     void displayRecord(Record *rec);
     Node* searchDupKey(int numVotes);
+    int countNodes(Node* cur);
 };
 
 #endif //CZ4031_PROJ1_BPLUSTREE_H
