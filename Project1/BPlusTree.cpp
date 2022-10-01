@@ -13,7 +13,7 @@
 
 using namespace std;
 
-int MAX_NODE_KEYS = 5;
+int MAX_NODE_KEYS = 12; //5
 int MAX_NODE_POINTERS = MAX_NODE_KEYS + 1;
 
 Node::Node()
@@ -211,6 +211,7 @@ void BPlusTree::insertInternal(Node* cur, Node* child, const key& numVotes){
 
 void BPlusTree::removeKey(const int numVotes){
     //find leaf containing (key, pointer) entry to delete
+    int del_counter = 0;
     if (root == nullptr){
         cout << "Empty Tree\n";
     } else {
@@ -219,6 +220,7 @@ void BPlusTree::removeKey(const int numVotes){
         int leftSibling, rightSibling = 0;
         while (!cursor->leafNode) {
             for (int i = 0; i < cursor->numOfKeys; i += 1) {
+                //set parent
                 parent = cursor;
                 leftSibling = i - 1;
                 rightSibling = i + 1;
@@ -335,7 +337,7 @@ void BPlusTree::removeKey(const int numVotes){
     }
 }
 /*
-void BPlusTree::removeKey(const key& numVotes){
+void BPlusTree::removeKey(const int numVotes){
     //find leaf containing (key, pointer) entry to delete
     if (root == nullptr){
         cout << "Empty Tree\n";
@@ -348,7 +350,7 @@ void BPlusTree::removeKey(const key& numVotes){
                 parent = cursor;
                 leftSibling = i - 1;
                 rightSibling = i + 1;
-                if (numVotes.keyValue < cursor->keys[i].keyValue) {
+                if (numVotes < cursor->keys[i].keyValue) {
                     cursor = cursor->nodePtr[i];
                     break;
                 }
@@ -363,7 +365,7 @@ void BPlusTree::removeKey(const key& numVotes){
         bool  found = false;
         int pos = 0; //tracker to find which key matching
         for (pos = 0; pos < cursor->numOfKeys; pos += 1) { //looking through leaf node for matching key
-            if (cursor->keys[pos].keyValue == numVotes.keyValue) {
+            if (cursor->keys[pos].keyValue == numVotes) {
                 found = true;
                 break;
             }
@@ -840,3 +842,5 @@ Node* BPlusTree::searchDupKey(int numVotes)
     }
     return nullptr;
 }
+
+//int BPlusTree::

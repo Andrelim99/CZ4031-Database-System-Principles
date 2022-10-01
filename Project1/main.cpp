@@ -162,14 +162,20 @@ int main() {
         Delete those movies with the attribute �numVotes� equal to 1,000, update the B+ tree accordingly, and report the following statistics:
         - The number of times that a node is deleted (or two nodes are merged) during the process of the updating the B+ tree;
         - The number nodes of the updated B+ tree;
-        - The height of the updated B+ tree;
+        - The height of the updated B+ tree;-
         - The content of the root node and its 1st child node of the updated B+ tree;
         */
 
        cout << "-----------------Experiment 5-----------------" << endl;
        //int node_del_count = newTree.remove(1000);
-       newTree.remove(1000);
+
+        vector<void*> rec_address_5 = newTree.searchNode(1000,1000);
+        mempool.computeDatablockAccessed(rec_address_5);
+       newTree.removeKey(1000);
        cout << "Number of time node is deleted/merged: " << endl;
+       vector<void*> rec_address_6 = newTree.searchNode(1000,1000);
+       mempool.computeDatablockAccessed(rec_address_6);
+       cout << "Height of updated B+ Tree           : " << newTree.getHeightOfTree(newTree.getRootOfTree()) << endl;
        cout << "-----------------End of blocksize " <<  size << "-----------------" << endl << endl;
     }
 

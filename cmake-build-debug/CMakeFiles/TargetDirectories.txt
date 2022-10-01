@@ -1,3 +1,3 @@
-C:/Users/Andre/CLionProjects/CZ4031_Proj1/cmake-build-debug/CMakeFiles/CZ4031_Proj1.dir
-C:/Users/Andre/CLionProjects/CZ4031_Proj1/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Andre/CLionProjects/CZ4031_Proj1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/jimse/Documents/GitHub/CZ4031-Database-System-Principles/cmake-build-debug/CMakeFiles/CZ4031_Proj1.dir
+C:/Users/jimse/Documents/GitHub/CZ4031-Database-System-Principles/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/jimse/Documents/GitHub/CZ4031-Database-System-Principles/cmake-build-debug/CMakeFiles/rebuild_cache.dir

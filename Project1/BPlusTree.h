@@ -44,7 +44,7 @@ public:
     BPlusTree();
     void insertKey(const key& numVotes);
     void insertInternal(Node* cur, Node* child, const key& numVotes);
-    void removeKey(const key& numVotes);
+    void removeKey(const int numVotes);
     void removeInternal(Node* cur, Node* child, const key& numVotes);
     Node* searchParent(Node* cur, Node* child);
     int getHeightOfTree(Node* cur);
