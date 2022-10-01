@@ -731,7 +731,7 @@ int BPlusTree::countNodes(Node* cur) {
     }
     else {
         int total = 0;
-        for (int i = 0; i < cur->numOfKeys; i++) {
+        for (int i = 0; i < cur->numOfKeys+1; i++) {
             total += countNodes(cur->nodePtr[i]);
         }
         return total;
