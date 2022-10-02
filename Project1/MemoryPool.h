@@ -34,8 +34,8 @@ struct Block{
 
 class MemoryPool {
 private:
-    int numBlocks, blockSize, dbSize, availableNumBlocks, curBlockIndex, blockAccessCounter;
-    unsigned char * startBlockPtr, *startMemoryPtr;
+    int numBlocks, blockSize, dbSize, recordOccupancySize, availableNumBlocks, curBlockIndex, blockAccessCounter;
+    unsigned char *startMemoryPtr;
     vector<Block> blocks;
     vector<int> blockAccessedList;
 

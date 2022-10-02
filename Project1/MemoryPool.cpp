@@ -19,6 +19,7 @@ MemoryPool::MemoryPool(int blockSize) {
     this->numBlocks = DISK_CAPACITY/blockSize;
     this->availableNumBlocks = numBlocks;
     this->dbSize = 0;
+    this->recordOccupancySize = 0;
     this->startMemoryPtr = new unsigned char[DISK_CAPACITY];
     this->curBlockIndex = 0;
     this->blockAccessCounter = 0;
@@ -70,7 +71,8 @@ bool MemoryPool::insertRecord(Record record) {
        //        update all values
        currentBlock->remainingCapacity -= RECORD_SIZE;
        currentBlock->numRecords++;
-       dbSize += recSize;
+       recordOccupancySize += recSize;
+       dbSize = recordOccupancySize + curBlockIndex * sizeof(Block);
        return true;
    }
    return false;
@@ -158,7 +160,8 @@ void MemoryPool::printMemoryPoolDetails() {
     cout << "Printing Memory Pool Details..." << endl << endl;
     cout << "Total Memory Capacity: " << DISK_CAPACITY/MB << "MB" << endl;
     cout << "Available Memory Capacity: " << (float)(DISK_CAPACITY - dbSize)/MB << "MB" << endl;
-    cout << "Database Size (Memory Used): " << (float)dbSize/MB << "MB" << endl << endl;
+    cout << "Database Size (Only accounting for records stored): " << (float)recordOccupancySize/MB << "MB" << endl;
+    cout << "Database Size (Accounting for Block header and records stored): " << (float)dbSize/MB << "MB" << endl << endl;
 
     cout << "Block size: " << blockSize << "B" << endl;
     cout << "Total number of blocks: " << numBlocks << endl;
